@@ -14,17 +14,21 @@ class Stock(models.Model):
     broker_fee = models.IntegerField()
     asset_portfolio_id = models.IntegerField()
 
+    etf_id = models.ForeignKey('ETF', blank=True, null=True, on_delete=models.SET_NULL)
+    share_is = models.ForeignKey('Share', blank=True, null=True, on_delete=models.SET_NULL)
+    bond_id = models.ForeignKey('Bond', blank=True, null=True, on_delete=models.SET_NULL)
+    target_for_date_id = models.ForeignKey('TargetForDate', blank=True, null=True, on_delete=models.SET_NULL)
+    price_target_id = models.ForeignKey('PriceTarget', blank=True, null=True, on_delete=models.SET_NULL)
+
 
 class ETF(models.Model):
     etf_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     etf_code = models.CharField(max_length=255)
-    stock_id = models.ManyToManyField('Stock', blank=True)
 
 
 class Share(models.Model):
     share_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     share_code = models.CharField(max_length=255)
-    stock_id = models.ManyToManyField('Stock', blank=True)
 
 
 class Bond(models.Model):
@@ -33,21 +37,18 @@ class Bond(models.Model):
     coupon_percent = models.IntegerField()
     coupon_price = models.IntegerField()
     yield_to_maturity = models.IntegerField()
-    stock_id = models.IntegerField()
 
 
 class TargetForDate(models.Model):
     target_for_date_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     description = models.CharField(max_length=1063)
     target_date = models.DateField()
-    stock_id = models.ManyToManyField('Stock', blank=True)
 
 
 class PriceTarget(models.Model):
     price_target_id = models.UUIDField(primary_key=True, default=uuid.uuid4(), editable=False)
     description = models.CharField(max_length=1063)
     target_price = models.IntegerField()
-    stock_id = models.ManyToManyField('Stock', blank=True)
 
 
 class Currency(models.Model):
